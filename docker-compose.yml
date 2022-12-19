@@ -17,12 +17,16 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./data/caddy:/data
-        restart: always
+            - ./letsencrypt/fullchain.pem:/etc/ssl/private/fullchain.pem:ro,z
+            - ./letsencrypt/privkey.pem:/etc/ssl/private/privkey.pem:ro,z
+        # restart: always
 
     couchserver:
         image: couchdb:3.1.2
-        ports:
-            - "5984:5984"
+        # ports:
+        #     - "5984:5984"
+        expose:
+            - 5984
         environment:
             - COUCHDB_USER=${COUCHDB_USER}
             - COUCHDB_PASSWORD=${COUCHDB_PW}
@@ -42,9 +46,10 @@ services:
             caddy.handle_path: /*
             caddy.handle_path.0_respond: "\"\" 403"
             caddy.handle_path.0_header.-Server: ""
-            caddy.handle_path_1: /e=_/* 
+            caddy.handle_path_1: /obsidian/* 
             caddy.handle_path_1.0_reverse_proxy: "{{upstreams 5984}}"
-        restart: always
+            caddy.tls: "/etc/ssl/private/fullchain.pem /etc/ssl/private/privkey.pem"
+        # restart: always
 
 networks:
   caddy:

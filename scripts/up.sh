@@ -1,5 +1,6 @@
 #!/bin/bash
 cd `dirname $0`
+source ./export.sh
 cd ..
 yaml="-f docker-compose.yml"
 arch=$(uname -i)

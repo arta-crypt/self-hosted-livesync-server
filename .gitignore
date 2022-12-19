@@ -1,3 +1,5 @@
 data/caddy/**
 data/couchdb/**
+scripts/export.sh
+letsencrypt/**
 !.gitempty
